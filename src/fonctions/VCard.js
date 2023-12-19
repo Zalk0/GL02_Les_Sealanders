@@ -2,13 +2,13 @@ const prompt = require('prompt-sync')();
 const fs = require('fs');
 let VCard = (args, logger) => {
     // Validation pour le nom et prénom (lettres uniquement)
-    const regexNomPrenom = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/;
+    const regexNomPrenom = /^[\w.'-]+$/;
 
-    // Validation pour le numéro de téléphone (10 chiffres)
-    const regexTelephone = /^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/;
+    // Validation pour le numéro de téléphone (France métropolitaine)
+    const regexTelephone = /^(?:\+33[\s.-]?|0)[1-9](?:[\s.-]?\d{2}){4}$/;
 
     // Validation pour l'adresse email
-    const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
+    const regexEmail = /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/;
 
     //affichage infos
     console.log("**Remplissez la Vcard**\n")
