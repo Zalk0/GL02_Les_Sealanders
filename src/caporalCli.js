@@ -18,7 +18,7 @@ cli
 	.option('-t, --showTokenize', 'log the tokenization results', { validator: cli.BOOLEAN, default: false })
 	.action(({ args, options, logger }) => {
 
-		// vérification de l'identité 
+		// vérification de l'identité
 		let connexion = login();
 		if (connexion === "Professeur") {
 
@@ -54,7 +54,7 @@ cli
 	.argument('<file>', 'The file to create')
 	.action(({ args, options, logger }) => {
 
-		// vérification de l'identité 
+		// vérification de l'identité
 		let connexion = login();
 		if (connexion === "Professeur") {
 
@@ -79,7 +79,7 @@ cli
 	.argument('<category>', 'The category to set')
 	.action(({ args, options, logger }) => {
 
-		// vérification de l'identité 
+		// vérification de l'identité
 		let connexion = login();
 		if (connexion === "Professeur") {
 
@@ -121,7 +121,7 @@ cli
 	.argument('<comment>', 'The comment to add')
 	.action(({ args, options, logger }) => {
 
-		// vérification de l'identité 
+		// vérification de l'identité
 		let connexion = login();
 		if (connexion === "Professeur") {
 
@@ -141,7 +141,7 @@ cli
 	.argument('<question>', 'The question to search')
 	.action(({ args, options, logger }) => {
 
-		// vérification de l'identité 
+		// vérification de l'identité
 		let connexion = login();
 		if (connexion === "Professeur") {
 
@@ -182,24 +182,24 @@ cli
 		else { console.log('**Vous n\'avez pas les droits pour utiliser cette commande**'); }
 	})
 
-	// Permet de créer la Vcard 
+	// Permet de créer la Vcard
 	.command('Vcard', 'Create a Vcard')
 	.action(({ args, options, logger }) => {
 
 		let connexion = login();
 		if (connexion === "Professeur") {
 
-			// Validation pour le nom et prénom (lettres uniquement)
-			const regexNomPrenom = /^[a-zA-ZàáâäãåąčćęèéêëėįìíîïłńòóôöõøùúûüųūÿýżźñçčšžÀÁÂÄÃÅĄĆČĖĘÈÉÊËÌÍÎÏĮŁŃÒÓÔÖÕØÙÚÛÜŲŪŸÝŻŹÑßÇŒÆČŠŽ∂ð ,.'-]+$/;
+            // Validation pour le nom et prénom (lettres uniquement)
+            const regexNomPrenom = /^[\w.'-]+$/;
 
-			// Validation pour le numéro de téléphone (10 chiffres)
-			const regexTelephone = /^(?:(?:\+|00)33[\s.-]{0,3}(?:\(0\)[\s.-]{0,3})?|0)[1-9](?:(?:[\s.-]?\d{2}){4}|\d{2}(?:[\s.-]?\d{3}){2})$/;
+            // Validation pour le numéro de téléphone (France métropolitaine)
+            const regexTelephone = /^(?:\+33[\s.-]?|0)[1-9](?:[\s.-]?\d{2}){4}$/;
 
-			// Validation pour l'adresse email
-			const regexEmail = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))/;
+            // Validation pour l'adresse email
+            const regexEmail = /^[\w.-]+@[\w.-]+\.[a-zA-Z]{2,}$/;
 
 			//affichage infos
-			console.log("**Remplissez la Vcard**\n")
+			console.log("**Remplissez la Vcard**\n");
 
 			let nom, prenom, telephone, adresse, matiere, email;
 
