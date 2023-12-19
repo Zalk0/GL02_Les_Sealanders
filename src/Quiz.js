@@ -1,164 +1,164 @@
-var Comment = function(text) {
+var Comment = function (text) {
     this.type = 'comment';
     this.text = text;
 };
 
-var Category = function(name) {
+var Category = function (name) {
     this.type = 'category';
     this.name = name;
     this.elements = [];
 };
 
-Category.prototype.addElement = function(element) {
+Category.prototype.addElement = function (element) {
     this.elements.push(element);
 };
 
-var Question = function(titre, textFormatting){
+var Question = function (titre, textFormatting) {
 
     this.type = 'question';
     this.titre = titre;
     this.textFormatting = textFormatting;
     //Liste de textes (énoncés) et de réponses, pour garder l'ordre
-    this.textesReponses = []; 
+    this.textesReponses = [];
 }
 
-Question.prototype.toGift = function(){
-    let gift = '::' + this.titre + '::[' + this.textFormatting+']\n';
-    this.textesReponses.forEach(function(texteReponse){
+Question.prototype.toGift = function () {
+    let gift = '::' + this.titre + '::[' + this.textFormatting + ']\n';
+    this.textesReponses.forEach(function (texteReponse) {
         //Si c'est un string, on l'ajoute
-        if(typeof texteReponse === 'string'){
+        if (typeof texteReponse === 'string') {
             gift += texteReponse;
         } else {
-            gift+= "{"+texteReponse.toGift()+"}";
+            gift += "{" + texteReponse.toGift() + "}";
         }
     });
     return gift;
 }
 
-var ReponseVraiFaux = function(texte){
+var ReponseVraiFaux = function (texte) {
     this.texte = texte;
     this.feedbacks = [];
     this.type = 'vraiFaux';
 }
 
-ReponseVraiFaux.toGift = function(){
+ReponseVraiFaux.toGift = function () {
     let giftRep = texte;
-    this.feedbacks.forEach(function(feedback){
+    this.feedbacks.forEach(function (feedback) {
         giftRep += "#" + feedback;
     });
     return giftRep;
 }
 
-var ReponseMatchingPairs = function(){
+var ReponseMatchingPairs = function () {
     this.pairs = {};
     this.type = 'matchingPairs';
 }
 
-ReponseMatchingPairs.prototype.toGift = function(){
+ReponseMatchingPairs.prototype.toGift = function () {
     let giftRep = '';
-    for(let key in this.pairs){
-        giftRep += "="+key + " -> " + this.pairs[key] + "\n";
+    for (let key in this.pairs) {
+        giftRep += "=" + key + " -> " + this.pairs[key] + "\n";
     }
     return giftRep;
 }
 
-var ReponseNumerique = function(reponse, reponseAltUne,poids=1){
+var ReponseNumerique = function (reponse, reponseAltUne, poids = 1) {
     this.poids = poids;
     this.reponse = reponse;
     this.reponseAlt = reponseAltUne;
     this.type = 'numeric';
 }
 
-ReponseNumerique.prototype.toGift = function(){
-    let giftRep = "#"+this.reponse;
-    if(this.reponseAlt){
+ReponseNumerique.prototype.toGift = function () {
+    let giftRep = "#" + this.reponse;
+    if (this.reponseAlt) {
         giftRep += "=" + this.reponseAlt;
     }
     return giftRep;
 }
 
-var ReponseAutre = function(texte, poids, feedback){
+var ReponseAutre = function (texte, poids, feedback) {
     this.texte = texte;
     this.poids = poids;
     this.feedback = feedback;
     this.type = 'autres';
 }
 
-ReponseAutre.prototype.toGift = function(){
-    let giftRep = "="+ this.texte;
-    if (this.poids !=undefined){
-        giftRep += "%"+this.poids+"%";
+ReponseAutre.prototype.toGift = function () {
+    let giftRep = "=" + this.texte;
+    if (this.poids != undefined) {
+        giftRep += "%" + this.poids + "%";
     }
-    if(this.feedback != undefined){
-        giftRep += "#"+this.feedback;
+    if (this.feedback != undefined) {
+        giftRep += "#" + this.feedback;
     }
     return giftRep;
 }
 
-var ReponseSimple = function(bonneRep = null){
+var ReponseSimple = function (bonneRep = null) {
     this.reponses = [];
     this.bonneReponse = bonneRep;
     this.type = 'simple';
 }
 
-ReponseSimple.prototype.toGift = function(){
+ReponseSimple.prototype.toGift = function () {
     let giftRep = "1:SA:"
-    if (this.bonneReponse != null){
-        giftRep += "~"+this.bonneReponse;
+    if (this.bonneReponse != null) {
+        giftRep += "~" + this.bonneReponse;
     }
-    this.reponses.forEach(function(reponse){
-        giftRep += "="+reponse;
+    this.reponses.forEach(function (reponse) {
+        giftRep += "=" + reponse;
     });
     return giftRep;
 }
 
-ReponseSimple.prototype.addReponse = function(reponse, bonneRep = false){
+ReponseSimple.prototype.addReponse = function (reponse, bonneRep = false) {
     this.reponses.push(reponse);
-    if(bonneRep){
+    if (bonneRep) {
         this.bonneReponse = reponse;
     }
 }
 
-var ReponseMultiple = function(){
+var ReponseMultiple = function () {
     this.reponses = [];
     this.bonnesReponses = [];
     this.type = 'multiple';
 }
 
-ReponseMultiple.prototype.addReponse = function(reponse, bonneRep = false){
-    if (bonneRep){
+ReponseMultiple.prototype.addReponse = function (reponse, bonneRep = false) {
+    if (bonneRep) {
         reponse = reponse.substring(1)
     }
     this.reponses.push(reponse);
-    if(bonneRep){
+    if (bonneRep) {
         this.bonnesReponses.push(reponse);
     }
 }
 
-ReponseMultiple.prototype.toGift = function(){
+ReponseMultiple.prototype.toGift = function () {
     let giftRep = "1:MC:";
-    this.bonnesReponses.forEach(function(reponse){
-        giftRep += "="+reponse;
+    this.bonnesReponses.forEach(function (reponse) {
+        giftRep += "=" + reponse;
     });
-    this.reponses.forEach(function(reponse){
-        giftRep += "~"+reponse;
+    this.reponses.forEach(function (reponse) {
+        giftRep += "~" + reponse;
     });
     return giftRep;
 }
 
-var Quiz = function() {
+var Quiz = function () {
     this.elements = [];
 };
 
-Quiz.prototype.rightAmountOfQuestions = function() {
+Quiz.prototype.rightAmountOfQuestions = function () {
     let nbQuestion = this.getNumberOfQuestions();
     return nbQuestion >= 15 && nbQuestion <= 20;
 }
 
-Quiz.prototype.getNumberOfQuestions = function() {
+Quiz.prototype.getNumberOfQuestions = function () {
     let nbQuestion = 0;
-    this.elements.forEach(function(element){
-        if(element.type == 'question'){
+    this.elements.forEach(function (element) {
+        if (element.type == 'question') {
             nbQuestion++;
         }
     });
@@ -166,11 +166,11 @@ Quiz.prototype.getNumberOfQuestions = function() {
 }
 
 // recherche du premier type de réponse rencontré dans les questions
-Question.prototype.getType = function() {
+Question.prototype.getType = function () {
     let type = "";
-    this.textesReponses.forEach(function(elem){
+    this.textesReponses.forEach(function (elem) {
         // si l'élément n'est pas string alors c'est forcément une réponse
-        if(typeof elem !== "string"){
+        if (typeof elem !== "string") {
             //console.log(elem.type);
             type = elem.type;
         }
@@ -179,13 +179,13 @@ Question.prototype.getType = function() {
 };
 
 // compter le nombre de questions par type
-Quiz.prototype.dicoProfile = function() {
+Quiz.prototype.dicoProfile = function () {
     // création d'un dictionnaire qui va stocker le nombre de questions par type
     dico = {}
-    this.elements.forEach(function(elem){
-        if(elem.type === "question"){
+    this.elements.forEach(function (elem) {
+        if (elem.type === "question") {
             type = elem.getType();
-            if(type!=""){
+            if (type != "") {
                 // si le type de la question est déjà présent, on y ajoute 1
                 if (dico[type] === undefined) {
                     dico[type] = 1
