@@ -1,8 +1,19 @@
 const fs = require('fs');
-const { Comment, Category, Question, Quiz, ReponseVraiFaux, ReponseMatchingPairs, ReponseNumerique, ReponseAutre, ReponseSimple, ReponseMultiple } = require('./Quiz.js');
+const {
+    Comment,
+    Category,
+    Question,
+    Quiz,
+    ReponseVraiFaux,
+    ReponseMatchingPairs,
+    ReponseNumerique,
+    ReponseAutre,
+    ReponseSimple,
+    ReponseMultiple
+} = require('./Quiz.js');
 // GiftParser
 
-var GiftParser = function(sTokenize, sParsedSymb) {
+var GiftParser = function (sTokenize, sParsedSymb) {
     this.parsedGIFT = [];
     this.symb = ["//", "$CATEGORY:", "::", "#", "=", "->", "~"];
     this.showTokenize = sTokenize;
@@ -16,7 +27,7 @@ var GiftParser = function(sTokenize, sParsedSymb) {
 
 // tokenize : tranform the data input into a list
 // <eol> = CRLF
-GiftParser.prototype.tokenize = function(data) {
+GiftParser.prototype.tokenize = function (data) {
     var separator = /(\$CATEGORY:|\/\/|::(?:[^:]+|[\s\S]+?)::)(.*?)(?=\$CATEGORY:|\/\/|::(?:[^:]+|[\s\S]+?)::|$)/gs;
     data = data.match(separator);
     // data = data.filter((val, idx) => !val.match(separator))
@@ -28,46 +39,45 @@ GiftParser.prototype.tokenize = function(data) {
 // GiftParser.prototype.tokenize
 
 // parse : analyze data by calling the first non terminal rule of the grammar
-GiftParser.prototype.parse = function(data){
-	var tData = this.tokenize(data);
-	if(this.showTokenize){
-		console.log(tData);
-	}
-	this.grammaireGift(tData);
+GiftParser.prototype.parse = function (data) {
+    var tData = this.tokenize(data);
+    if (this.showTokenize) {
+        console.log(tData);
+    }
+    this.grammaireGift(tData);
 }
 
 // Parser operand
 
-GiftParser.prototype.errMsg = function(msg, input){
-	this.errorCount++;
-	console.log("Parsing Error ! on "+input+" -- msg : "+msg);
+GiftParser.prototype.errMsg = function (msg, input) {
+    this.errorCount++;
+    console.log("Parsing Error ! on " + input + " -- msg : " + msg);
 }
 
 // Read and return a symbol from input
-GiftParser.prototype.next = function(input){
-	var curS = input.shift();
-	if(this.showParsedSymbols){
-		console.log(curS);
-	}
-	return curS
+GiftParser.prototype.next = function (input) {
+    var curS = input.shift();
+    if (this.showParsedSymbols) {
+        console.log(curS);
+    }
+    return curS
 }
 
 // accept : verify if the arg s is part of the language symbols.
-GiftParser.prototype.accept = function(s){
-	var idx = this.symb.indexOf(s);
-	// index 0 exists
-	if(idx === -1){
-		this.errMsg("symbol "+s+" unknown", [" "]);
-		return false;
-	}
+GiftParser.prototype.accept = function (s) {
+    var idx = this.symb.indexOf(s);
+    // index 0 exists
+    if (idx === -1) {
+        this.errMsg("symbol " + s + " unknown", [" "]);
+        return false;
+    }
 
-	return idx;
+    return idx;
 }
 
 
-
 // check : check whether the arg elt is on the head of the list
-GiftParser.prototype.check = function(s, input){
+GiftParser.prototype.check = function (s, input) {
     if (input.length > 0 && this.accept(input[0]) == this.accept(s)) {
         return true;
     }
@@ -76,28 +86,28 @@ GiftParser.prototype.check = function(s, input){
 
 
 // expect : expect the next symbol to be s.
-GiftParser.prototype.expect = function(s, input){
-	if(s == this.next(input)){
-		console.log("Reckognized! "+s)
-		return true;
-	}else{
-		this.errMsg("symbol "+s+" doesn't match", input);
-	}
-	return false;
+GiftParser.prototype.expect = function (s, input) {
+    if (s == this.next(input)) {
+        console.log("Reckognized! " + s)
+        return true;
+    } else {
+        this.errMsg("symbol " + s + " doesn't match", input);
+    }
+    return false;
 }
 
 // checkComment : Check if the input is a comment
-GiftParser.prototype.checkComment = function(input){
-	return (input.length > 0 && input[0].startsWith("//"));
+GiftParser.prototype.checkComment = function (input) {
+    return (input.length > 0 && input[0].startsWith("//"));
 }
 
 // checkCategory : Check if the input is a category
-GiftParser.prototype.checkCategory = function(input){
+GiftParser.prototype.checkCategory = function (input) {
     return (input.length > 0 && input[0].startsWith("$CATEGORY:"));
 }
 
 // checkQuestion : Check if the input is a question
-GiftParser.prototype.checkQuestion = function(input){
+GiftParser.prototype.checkQuestion = function (input) {
     return (input.length > 0 && input[0].startsWith("::"));
 }
 
@@ -105,15 +115,15 @@ GiftParser.prototype.checkQuestion = function(input){
 // Parser rules
 
 // <grammaire-gift> = *(<element>)
-GiftParser.prototype.grammaireGift = function(input){
-	this.currentQuiz = new Quiz();
-	while (input.length > 0) {
+GiftParser.prototype.grammaireGift = function (input) {
+    this.currentQuiz = new Quiz();
+    while (input.length > 0) {
         this.currentQuiz.elements.push(this.element(input));
     }
 }
 
 // *(WSP)(commentaire/categorie/question) *(WSP)/CRLF
-GiftParser.prototype.element = function(input){
+GiftParser.prototype.element = function (input) {
     var element;
     if (this.checkComment(input)) {
         element = this.commentaire(input);
@@ -128,14 +138,14 @@ GiftParser.prototype.element = function(input){
 }
 
 // "//" 1*(VCHAR/WSP) CRLF
-GiftParser.prototype.commentaire = function(input){
+GiftParser.prototype.commentaire = function (input) {
     input[0] = input[0].substring(2);
     var text = this.next(input); // obtenir le texte du commentaire
     return new Comment(text);
 }
 
 // "$CATEGORY:" (VCHAR/WSP) CRLF
-GiftParser.prototype.categorie = function(input) {
+GiftParser.prototype.categorie = function (input) {
     input[0] = input[0].substring("$CATEGORY:".length);
     var categoryName = this.next(input);
 
@@ -144,7 +154,7 @@ GiftParser.prototype.categorie = function(input) {
 };
 
 // [titre] [text-formating] texte [reponse] texte
-GiftParser.prototype.question = function(input){
+GiftParser.prototype.question = function (input) {
     parsedQuestion = input[0].match(/::(.*?)::(?:\[(.*?)\])?(.*)/s)
     var titre = this.titre(parsedQuestion[1]);
     var textFormatting = this.textFormating(parsedQuestion[2]);
@@ -156,84 +166,84 @@ GiftParser.prototype.question = function(input){
 
 
 // "::" texte "::"
-GiftParser.prototype.titre = function(input) {
+GiftParser.prototype.titre = function (input) {
     var text = this.texte(input);
     return text;
 };
 
 // "[" (%s"moodle" / %s"html" / %s"markdown" / %s"plain") "]"
-GiftParser.prototype.textFormating = function(input){
+GiftParser.prototype.textFormating = function (input) {
     if (input != null) {
         var format = input;
-    }else{
+    } else {
         var format = "plain";
     }
     return format;
 }
 
 // "{" type-reponse "}"
-GiftParser.prototype.reponse = function(input,question) {
+GiftParser.prototype.reponse = function (input, question) {
     elems = input.split(/(\{[^{}]+\})/s)
     for (var i = 0; i < elems.length; i++) {
         if (this.isReponse(elems[i])) {
             this.typeReponse(elems[i].replace(/[\{\}]/g, ''), question);
-        } else if (elems[i].trim() != ""){
-            question.textesReponses.push(this.texte(elems[i])); 
+        } else if (elems[i].trim() != "") {
+            question.textesReponses.push(this.texte(elems[i]));
         }
     }
 }
 
-GiftParser.prototype.isReponse = function(input){
+GiftParser.prototype.isReponse = function (input) {
     return input.startsWith("{");
 }
 
 
 // vrai-faux/matching/numerique/autre
-GiftParser.prototype.typeReponse = function(input, question){
+GiftParser.prototype.typeReponse = function (input, question) {
     if (this.isTrueFalse(input)) {
         this.vraiFaux(input, question);
     } else if (this.isMatching(input)) {
-        this.matchingPairs(input,question);
+        this.matchingPairs(input, question);
     } else if (this.isNumerique(input)) {
-        this.numerique(input,question);
+        this.numerique(input, question);
     } else if (this.isAutre(input)) {
-        this.autre(input,question);
-    } else if (this.isSA(input)){
-        this.simpleAnswer(input,question);
-    } else if (this.isMC(input)){
-        this.multipleChoice(input,question);
+        this.autre(input, question);
+    } else if (this.isSA(input)) {
+        this.simpleAnswer(input, question);
+    } else if (this.isMC(input)) {
+        this.multipleChoice(input, question);
     } else {
         this.errMsg("Invalid typeReponse", input);
     }
 }
 
-GiftParser.prototype.isTrueFalse = function(input){
-    return (input.trim().startsWith("T") || input.trim().startsWith("F") || input.trim().startsWith("TRUE") || input.trim().startsWith("FALSE")) ;
+GiftParser.prototype.isTrueFalse = function (input) {
+    return (input.trim().startsWith("T") || input.trim().startsWith("F") || input.trim().startsWith("TRUE") || input.trim().startsWith("FALSE"));
 }
 
-GiftParser.prototype.isMatching = function(input){
+GiftParser.prototype.isMatching = function (input) {
     return /->/.test(input.trim());
 }
 
-GiftParser.prototype.isNumerique = function(input){
+GiftParser.prototype.isNumerique = function (input) {
     return input.trim().startsWith("#");
 }
 
-GiftParser.prototype.isAutre = function(input){
+GiftParser.prototype.isAutre = function (input) {
     input = input.replace(/[\r\n]+/g, "").trim();
     return input.startsWith("~") || input.startsWith("=");
 }
 
-GiftParser.prototype.isSA = function(input){
+GiftParser.prototype.isSA = function (input) {
     return input.trim().startsWith("1:SA:");
 }
 
-GiftParser.prototype.isMC = function(input){
+GiftParser.prototype.isMC = function (input) {
     return input.trim().startsWith("1:MC:");
 }
 
 // ("T"/"F"/"TRUE"/"FALSE") [feedback] [feedback]
-GiftParser.prototype.vraiFaux = function(input, question) {
+GiftParser.prototype.vraiFaux = function (input, question) {
     let elems = input.trim().match(/^(FALSE|TRUE|T|F)(#(?:.+))?$/);
     if (elems) {
         var reponse = new ReponseVraiFaux(elems[1]);
@@ -247,7 +257,7 @@ GiftParser.prototype.vraiFaux = function(input, question) {
 }
 
 // 3*("=" texte "->" texte)
-GiftParser.prototype.matchingPairs = function(input,question) {
+GiftParser.prototype.matchingPairs = function (input, question) {
     var pairs = input.split(/=/);
     var reponse = new ReponseMatchingPairs();
     for (var i = 0; i < pairs.length; i++) {
@@ -260,44 +270,44 @@ GiftParser.prototype.matchingPairs = function(input,question) {
 }
 
 // 1*("~"/"=")[poids] texte [feedback]
-GiftParser.prototype.autre = function(input,question) {
+GiftParser.prototype.autre = function (input, question) {
     var elems = input.match(/[^~=]+|~|=+/g);
     let i = 0;
-    while (i+1 < elems.length) {
+    while (i + 1 < elems.length) {
         if (elems[i] == "~" || elems[i] == "=") {
-            question.textesReponses.push(new ReponseAutre(elems[i+1], 1, null));
+            question.textesReponses.push(new ReponseAutre(elems[i + 1], 1, null));
             i++;
         } else {
             i++;
-            continue;
-        }  
+
+        }
     }
 }
 
 // "#" (reponse-numerique / 2*("="[poids] reponse-numerique [feedback]))
-GiftParser.prototype.numerique = function(input,question) {
+GiftParser.prototype.numerique = function (input, question) {
     // retirer le # en début de chaîne (en utilisant substring)
     input = input.substring(1);
     // Séparer la chaîne en fonction des "="
     var elems = input.split(/=/);
     for (var i = 0; i < elems.length; i++) {
         if (elems[i].trim() != "") {
-            this.reponseNumerique(elems[i],question);
+            this.reponseNumerique(elems[i], question);
         }
     }
 }
 
 // nombre[":"nombre/".."nombre]
-GiftParser.prototype.reponseNumerique = function(input,question){
-	//Séparer la chaîne en fonction des ":" ou ".."
+GiftParser.prototype.reponseNumerique = function (input, question) {
+    //Séparer la chaîne en fonction des ":" ou ".."
     var elems = input.split(/:|\.\./);
-    if (elems && elems[0].trim() != ""){
+    if (elems && elems[0].trim() != "") {
         question.textesReponses.push(new ReponseNumerique(elems[0].trim(), elems[1].trim()));
     }
 }
 
 // "{1:SA:" 1*(WSP/VCHAR) "}"
-GiftParser.prototype.simpleAnswer = function(input,question) {
+GiftParser.prototype.simpleAnswer = function (input, question) {
     // on retire les accolades et le 1:SA: au début de la chaîne
     input = input.substring(6);
     input = input.substring(0, input.length - 1);
@@ -311,14 +321,14 @@ GiftParser.prototype.simpleAnswer = function(input,question) {
             reponse.addReponse(elems[i].trim(), nextAnswerTrue);
         }
         nextAnswerTrue = false;
-        if (i+1 < elems.length) {
+        if (i + 1 < elems.length) {
             nextAnswerTrue = elems[i].trim().endsWith("~");
         }
     }
 }
 
 // "{1:MC:" 1*(WSP/VCHAR) "}"
-GiftParser.prototype.multipleChoice = function(input,question) {
+GiftParser.prototype.multipleChoice = function (input, question) {
     // on retire les accolades et le 1:MC: au début de la chaîne
     input = input.substring(6);
     input = input.substring(0, input.length - 1);
@@ -335,12 +345,12 @@ GiftParser.prototype.multipleChoice = function(input,question) {
 }
 
 // "#"texte
-GiftParser.prototype.feedback = function(input){
+GiftParser.prototype.feedback = function (input) {
     return this.texte(input);
 }
 
 // "%" nombre "%"
-GiftParser.prototype.poids = function(input){
+GiftParser.prototype.poids = function (input) {
     if (input.match(/%(\d+)%/)) {
         return input.match(/%(\d+)%/)[1];
     } else {
@@ -348,7 +358,7 @@ GiftParser.prototype.poids = function(input){
     }
 }
 
-GiftParser.prototype.nombre = function(input){
+GiftParser.prototype.nombre = function (input) {
     var digit = this.digit(input);
     while (this.check("digit", input)) {
         digit += this.digit(input);
@@ -356,7 +366,7 @@ GiftParser.prototype.nombre = function(input){
     return digit;
 }
 
-GiftParser.prototype.digit = function(input){
+GiftParser.prototype.digit = function (input) {
     if (input.length > 0) {
         return this.next(input);
     } else {
@@ -366,7 +376,7 @@ GiftParser.prototype.digit = function(input){
 }
 
 // 1*(WSP/VCHAR)
-GiftParser.prototype.texte = function(input){
+GiftParser.prototype.texte = function (input) {
     if (matched = input.match(/.+/i)) {
         return matched[0];
     } else {
