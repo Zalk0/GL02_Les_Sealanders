@@ -47,3 +47,7 @@ Un rapport de plan de test est disponible dans le wiki de ce projet Github : [ht
 - Aurele CHAMBON
 - Tifenn NOËL
 - Adrien TORRENT
+
+## Licence
+
+Ce projet est sous la licence MIT : [https://github.com/Zalk0/GL02_Les_Sealanders/blob/main/LICENSE](https://github.com/Zalk0/GL02_Les_Sealanders/blob/main/LICENSE)
