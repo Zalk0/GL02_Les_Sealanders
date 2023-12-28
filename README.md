@@ -1,75 +1,49 @@
-# GL02_Les_Sealanders
-Ce fichier README.md a été rédigé et mis à jour le 2023-12-08 par Tifenn NOËL.
-
-## Table des matières
-* [Projet](#projet)
-* [Installation](#installation)
-* [Git](#git)
-* [Node.js](#node)
-* [Utilisation](#utilisation)
-* [Gift Parser CLI](#gift-parser-cli)
-* [Roadmap](#roadmap)
-* [Spécifications fonctionnelles SPEC](#spécifications_fonctionnelles_spec)
-* [Contributeurs](#contributeurs)
-* [Contact](#contact)
+# Utilitaire de composition de tests Moodle | Les Petits Foufous et Les Sealanders - Projet GL02
 
 ## Projet
-Dans le cadre de l'Unité d'Enseignement GL02, dispensée à l'UTT, notre équipe, **Les Sealanders**, se lance dans un projet proposé par le Ministère de l'éducation nationale de la République de Sealand : Un **system de gestion et de préparation de tests et examens en ligne.**
+Le ministère de l'éduction nationale de la République de Sealand (SRYEM - Sealand Republic Youth Education Ministry) est engagé dans une stratégie de transformation numérique de la pédagogie de son principal établissement d'éducation secondaire.
+Dans le souci d'accompagner les enseignants dans l'appropriation de nouveaux moyens d'évaluation par l'informatique, le SRYEM propose l'emploi du format GIFT ([https://docs.moodle.org/311/en/GIFT_format](https://docs.moodle.org/311/en/GIFT_format)) pour la gestion et la préparation de tests et examens en ligne.
 
-> Notre objectif est de permettre aux enseignants de compiler un ensemble de **questions** et de les rassembler dans un **fichier d'examen** au **format GIFT**. Le dossier résultant sera éventuellement déposé sur le serveur d'examen, bien que cet aspect spécifique soit hors du cadre de ce projet. De plus, notre outil facilitera la génération des **informations d'identification** et de contact d'un enseignant au **format VCard** (RFC 6350 et 6868). Notre logiciel offrira également la possibilité de **simuler l'expérience de test** d'un étudiant, en évitant la présence d'une même question plus d'une fois dans un examen contenant au moins **15 questions** et **pas plus de 20** et de générer un **rapport** de ses réponses.
+> L'objectif de cet outil est de permettre aux enseignants de compiler un ensemble de **questions** et de les rassembler dans un **fichier d'examen** au **format GIFT**. Le dossier résultant sera éventuellement déposé sur le serveur d'examen, bien que cet aspect spécifique soit hors du cadre de ce projet. De plus, cet outil facilitera la génération des **informations d'identification** et de contact d'un enseignant au **format VCard** (RFC 6350 et 6868). Cet outil offrira également la possibilité de **simuler l'expérience de test** d'un étudiant, en évitant la présence d'une même question plus d'une fois dans un examen contenant au moins **15 questions** et **pas plus de 20** et de générer un **rapport** de ses réponses.
 
 ## Installation
 
 #### Git
-Pour cloner le dépôt : `git clone https://github.com/FlavienVdl/GL02_Les_Sealanders/`  
-Pour accéder au répertoire du projet : `cd GL02_Les_Sealanders`
+Pour cloner le dépôt : 
+```bash
+git clone git@github.com:Zalk0/GL02_Les_Sealanders.git
+```
 
-#### Node.js
-Cet outil nécessite l'installation de Node.js | Version : **v21.3.0** ou +  
-Pour vérifier votre version : `node -v`  
-Pous installer Node.js sur Linux : `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash`  
-Pour mettre à jour Node.js : `nvm install <version>`  
-Documentation Node.js : [Documentation](https://nodejs.org/docs/latest/api/)  
+Pour accéder au répertoire du projet : 
+```bash
+cd GL02_Les_Sealanders
+```
 
-## Utilisation
+Pour installer les dépendances nécessaires au bon fonctionnement de l'outil, veuillez installez avec cette commande dans un terminal :
+```bash
+npm install
+```
 
-#### Gift Parser CLI 
-Le Gift Parser CLI est une interface en ligne de commande (CLI) développée en Node.js qui facilite la manipulation de fichiers au format GIFT (General Import Format Technology).
+Un guide d'utilisation de cet outil est disponible dans le wiki de ce projet Github : [https://github.com/Zalk0/GL02_Les_Sealanders/wiki/Guide-de-d%C3%A9marrage](https://github.com/Zalk0/GL02_Les_Sealanders/wiki/Guide-de-d%C3%A9marrage)
 
-Il propose plusieurs **commandes** pour travailler avec des fichiers GIFT :
-* Pour créer un quizz : `node caporalCLI.js create <chemin du fichier GIFT à créer>`
-* Pour ajouter une catégorie : `node caporalCLI.js setCategory <chemin du fichier GIFT> "categorie"`
-* Pour ajouter un commentaire : `node caporalCLI.js addComment <chemin du fichier GIFT> "Commentaire a ajouter"`
-* Pour ajouter une question : `node caporalCLI.js addQuestion d../data/SujetB_data test.gift "chaine de caractère"`
-* Pour rechercher une question : `node caporalCLI.js searchQuestion ../data/SujetB_data/ "chaine de caractère"` 
-* Pour visualiser une question et ses réponses : `node caporalCLI.js visualise ../data/ "titre exact"`
-* Pour afficher un fichier Vcard : `node caporalCLI.js Vcard`
-    * Connection possible que pour le rôle de professeur
-* Pour comparer le profil d'un test avec un ou plusieurs fichiers de la banque nationale de questions : `node caporalCli.js compare <test> <directory>`
-* Pour afficher le profil d'un test ou d'une banque de questions en générant un histogramme (svg) des types de questions : `node caporalCli.js profileChart <chemin du fichier GIFT>`
+Un guide pour les développeurs qui veulent utiliser ce projet est disponible dans le wiki de ce projet Github : [https://github.com/Zalk0/GL02_Les_Sealanders/wiki/Guide-pour-les-d%C3%A9veloppeurs](https://github.com/Zalk0/GL02_Les_Sealanders/wiki/Guide-pour-les-d%C3%A9veloppeurs)
 
+Un rapport de plan de test est disponible dans le wiki de ce projet Github : [https://github.com/Zalk0/GL02_Les_Sealanders/wiki/Plan-de-test](https://github.com/Zalk0/GL02_Les_Sealanders/wiki/Plan-de-test)
 
-## Roadmap
+## Liste des contributeurs
 
-#### Spécifications fonctionnelles SPEC
+**Professeur**
+- Matthieu TIXIER
 
-- [x] **SPEC1** : Composer un test au format GFIT (MUST)
-- [x] **SPEC2** : Rechercher et visualiser des questions (MUST)
-- [x] **SPEC3** : Sélectionner une question (MUST)
-- [x] **SPEC4** : Vérifier la qualité du test (MUST)
-- [x] **SPEC5** : Générer des fichiers VCard (SHOULD)
-- [ ] **SPEC6** : Simuler la passation d'un test (COULD)
-- [x] **SPEC7** : Afficher le profil d'un test GIFT ou d'une banque de questions (SHOULD)
-- [x] **SPEC8** : Comparer le profil d'un test avec un ou plusieurs fichiers de la banque nationale de questions (SHOULD)
-- [ ] **MAINTENANCE** : Le code sera maintenu et corriger au besoin. N'hésitez pas à nous contacter [Contact](#contact)
+**Équipe Les Petits Foufous**
+- Ali MIKOU
+- Eyvan FAURE
+- Alexis MARECHAL
+- Louis HALLEY
 
-
-## Contributeurs
-Flavien VIDAL (Chef des Sealanders)  
-Olivier BESNARD  
-Aurele CHAMBON  
-Tifenn NOËL  
-Adrien TORRENT  
-
-## Contact
-tifenn.noel@utt.fr
+**Équipe Les Sealanders**
+- Flavien VIDAL
+- Olivier BESNARD
+- Aurele CHAMBON
+- Tifenn NOËL
+- Adrien TORRENT
