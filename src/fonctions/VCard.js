@@ -32,13 +32,13 @@ let VCard = (args, logger) => {
     } while (!regexEmail.test(email));
 
     const vCardData = `BEGIN:VCARD
-			VERSION:4.0
-			FN:${prenom} ${nom}
-			TEL:${telephone}
-			ADR:${adresse}
-			EMAIL:${email}
-			ROLE:${matiere}
-			END:VCARD`;
+        VERSION:4.0
+        FN:${prenom} ${nom}
+        TEL:${telephone}
+        ADR:${adresse}
+        EMAIL:${email}
+        ROLE:${matiere}
+        END:VCARD`.replace(/^\s+/gm, "");
 
     // Génération de la vCard
     console.log(vCardData);
