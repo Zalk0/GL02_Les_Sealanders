@@ -157,7 +157,7 @@ cli
 
     // profile with chart
     .command('profileChart', 'Generate the profile of a test or question bank and export it as Vega-lite chart')
-    .alias('pflChart')
+    .alias('chart')
     .argument('<file>', 'The Gift file to use')
     // example : EM-U4-p32_33-Review.gift
     .action(({ args, options, logger }) => {
