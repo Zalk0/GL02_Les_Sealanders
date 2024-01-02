@@ -16,7 +16,7 @@ const compareTestProfiles = require('./fonctions/compareTestProfiles.js');
 
 cli
     .version('gift-parser-cli')
-    .version('0.07')
+    .version('1.0.0')
     // check gift
     .command('check', 'Check if <file> is a valid gift file')
     .argument('<file>', 'The file to check with gift parser')
