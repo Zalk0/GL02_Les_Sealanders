@@ -1,3 +1,5 @@
+Project made to learn how to improve an existing project and how teamwork works with Git. There are still open issues as our teacher asked us to create more issues than we had to resolve.
+
 # Utilitaire de composition de tests Moodle | Les Petits Foufous et Les Sealanders - Projet GL02
 
 ## Projet
